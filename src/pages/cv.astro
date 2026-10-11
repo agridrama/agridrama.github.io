@@ -1,0 +1,144 @@
+---
+import Base from '../layouts/Base.astro';
+import CvSection from '../components/CvSection.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import { site } from '../data/site';
+import {
+  education,
+  research,
+  experience,
+  projects,
+  publications,
+  talks,
+  awards,
+  activities,
+  skills,
+} from '../data/cv';
+---
+
+<Base title="CV" description={`Curriculum vitae of ${site.author}.`}>
+  <div class="cv-head">
+    <div>
+      <h1>{site.author} <span class="name-ja">{site.authorJa}</span></h1>
+      <p class="muted">{site.role}</p>
+    </div>
+    <button class="no-print" type="button" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+
+  <SocialLinks labels />
+
+  <CvSection heading="Education" entries={education} />
+  <CvSection heading="Research" entries={research} />
+  <CvSection heading="Experience" entries={experience} />
+  <CvSection heading="Projects" entries={projects} />
+
+  {
+    publications.length > 0 && (
+      <section>
+        <h2>Publications</h2>
+        <ol class="cv-pubs" reversed>
+          {publications.map((p) => (
+            <li>
+              {p.authors} ({p.year}). {p.url ? <a href={p.url}>{p.title}</a> : p.title}. <em>{p.venue}</em>.
+            </li>
+          ))}
+        </ol>
+      </section>
+    )
+  }
+
+  <CvSection heading="Talks" entries={talks} />
+  <CvSection heading="Awards & Grants" entries={awards} />
+  <CvSection heading="Activities" entries={activities} />
+
+  {
+    skills.length > 0 && (
+      <section>
+        <h2>Skills</h2>
+        {skills.map((s) => (
+          <div class="cv-entry">
+            <div class="cv-period">{s.label}</div>
+            <div>{s.items}</div>
+          </div>
+        ))}
+      </section>
+    )
+  }
+</Base>
+
+<style is:global>
+  .cv-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+
+  .cv-head > div {
+    flex: 1 1 20rem;
+  }
+
+  .cv-head p {
+    margin-bottom: 0.5rem;
+  }
+
+  .cv-head button {
+    font: inherit;
+    font-size: 0.875rem;
+    color: var(--text);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.3rem 0.75rem;
+    cursor: pointer;
+  }
+
+  .cv-head button:hover {
+    border-color: var(--muted);
+  }
+
+  main h2 {
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cv-entry {
+    display: grid;
+    grid-template-columns: 9.5rem 1fr;
+    gap: 0 1rem;
+    margin-bottom: 0.9rem;
+    break-inside: avoid;
+  }
+
+  .cv-entry.no-period {
+    grid-template-columns: 1fr;
+  }
+
+  .cv-period {
+    color: var(--muted);
+    font-size: 0.875rem;
+    line-height: 1.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cv-entry ul {
+    margin: 0.25rem 0 0;
+    padding-left: 1.1rem;
+  }
+
+  .cv-pubs {
+    padding-left: 1.5rem;
+  }
+
+  .cv-pubs li {
+    margin-bottom: 0.5rem;
+    break-inside: avoid;
+  }
+
+  @media (max-width: 30rem) {
+    .cv-entry {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

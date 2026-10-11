@@ -1,0 +1,62 @@
+---
+import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { site } from '../data/site';
+
+interface Props {
+  // Show the text label next to each icon (used on the CV so it survives printing)
+  labels?: boolean;
+}
+
+const { labels = false } = Astro.props;
+const icons = { github: faGithub, linkedin: faLinkedin };
+---
+
+<ul class:list={['social-links', { small: labels }]}>
+  {
+    site.links.map((link) => {
+      const [width, height, , , path] = icons[link.icon].icon;
+      return (
+        <li>
+          <a href={link.href} rel="me" aria-label={labels ? undefined : link.label} title={link.label}>
+            <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
+              <path fill="currentColor" d={String(path)} />
+            </svg>
+            {labels && <span>{link.label}</span>}
+          </a>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<style>
+  .social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--muted);
+  }
+
+  a:hover {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .small svg {
+    width: 1rem;
+    height: 1rem;
+  }
+</style>

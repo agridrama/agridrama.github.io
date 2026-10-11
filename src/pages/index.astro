@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import { site } from '../data/site';
+import { getPosts } from '../data/posts';
+
+const posts = (await getPosts()).slice(0, 5);
+---
+
+<Base>
+  <h1>{site.author} <span class="name-ja">{site.authorJa}</span></h1>
+  <p class="muted">{site.role}</p>
+
+  <div class="prose">
+    {site.bio.map((paragraph) => <p set:html={paragraph} />)}
+  </div>
+
+  <SocialLinks />
+
+  {
+    site.interests.length > 0 && (
+      <>
+        <h2>Research Interests</h2>
+        <ul>
+          {site.interests.map((interest) => (
+            <li>{interest}</li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+
+  {
+    posts.length > 0 && (
+      <>
+        <h2>Recent Posts</h2>
+        <PostList posts={posts} />
+        <p class="small" style="margin-top: 0.75rem">
+          <a href="/blog/">All posts →</a>
+        </p>
+      </>
+    )
+  }
+</Base>
